@@ -1,27 +1,26 @@
 
-import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+// frontend/src/components/CourseMap.js
+import React, { useEffect, useRef } from 'react';
 
-function CourseMap({ courseDetails, shotOverlay }) {
-    useEffect(() => {
-        // Any additional setup can go here
-    }, [courseDetails, shotOverlay]);
+const CourseMap = ({ course }) => {
+  const mapContainer = useRef(null);
 
-    return (
-        <MapContainer style={{ height: '500px', width: '100%' }} center={[40.7128, -74.0060]} zoom={13}>
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {courseDetails && (
-                <GeoJSON data={courseDetails.layout} style={{ color: 'blue' }} />
-            )}
-            {shotOverlay && (
-                <GeoJSON data={shotOverlay} style={{ color: 'red' }} />
-            )}
-        </MapContainer>
-    );
-}
+  useEffect(() => {
+    // Placeholder for map rendering logic (e.g., Mapbox or Leaflet.js)
+    if (course) {
+      console.log('Rendering map for course:', course.name);
+      // TODO: Add Mapbox or Leaflet.js map rendering here
+    }
+  }, [course]);
+
+  return (
+    <div>
+      <h2>Course Map: {course.name}</h2>
+      <div ref={mapContainer} style={{ height: '500px', width: '100%', border: '1px solid black' }}>
+        {/* Map will be rendered here */}
+      </div>
+    </div>
+  );
+};
 
 export default CourseMap;
