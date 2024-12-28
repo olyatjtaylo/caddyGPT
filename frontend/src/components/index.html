@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaddyGPT - Golfer's AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to CaddyGPT!</h1>
+        <div id="profile-container">
+            <h2>Golfer Profile</h2>
+            <button id="load-profile-btn">Load Profile</button>
+            <div id="profile-info"></div>
+        </div>
+        <div id="course-container">
+            <h2>Choose a Course</h2>
+            <select id="course-dropdown">
+                <option value="">Select Course</option>
+                <option value="sweetens_cove">Sweetens Cove</option>
+                <option value="stonehenge">Stonehenge</option>
+                <option value="heatherhurst">Heatherhurst</option>
+            </select>
+            <button id="upload-kml-btn">Upload KML</button>
+        </div>
+        <div id="recommendation-container">
+            <h2>Shot Recommendation</h2>
+            <label for="target-distance">Target Distance:</label>
+            <input type="number" id="target-distance">
+            <button id="get-recommendation-btn">Get Recommendation</button>
+            <div id="recommendation-info"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+
+<!-- My Profile Section -->
+<section id="my-profile" class="container">
+    <h2>My Profile</h2>
+    <form id="club-data-form">
+        <label for="club-name">Club Name:</label>
+        <input type="text" id="club-name" name="club_name" required>
+        
+        <label for="carry-distance">Carry Distance:</label>
+        <input type="number" id="carry-distance" name="carry_distance" required>
+        
+        <label for="run-distance">Run Distance:</label>
+        <input type="number" id="run-distance" name="run_distance" required>
+        
+        <label for="dispersion-radius">Dispersion Radius:</label>
+        <input type="number" id="dispersion-radius" name="dispersion_radius" required>
+        
+        <button type="submit" id="add-club-btn">Add/Update Club</button>
+    </form>
+
+    <h3>Club Data</h3>
+    <table id="club-data-table">
+        <thead>
+            <tr>
+                <th>Club</th>
+                <th>Carry</th>
+                <th>Run</th>
+                <th>Total</th>
+                <th>Dispersion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic Rows Will Be Added Here -->
+        </tbody>
+    </table>
+</section>
+
+
+<!-- Course Selection and KML Upload Section -->
+<section id="course-section" class="container">
+    <h2>Course Selection</h2>
+    <label for="course-dropdown">Select Course:</label>
+    <select id="course-dropdown">
+        <option value="" disabled selected>Select a course</option>
+        <option value="Test Course 1">Test Course 1</option>
+        <option value="Test Course 2">Test Course 2</option>
+        <option value="Test Course 3">Test Course 3</option>
+    </select>
+
+    <h3>KML Upload</h3>
+    <label for="kml-file">Upload KML File:</label>
+    <input type="file" id="kml-file" accept=".kml">
+    <button id="upload-kml-btn">Upload</button>
+</section>
+
+</body>
+</html>
