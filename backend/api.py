@@ -15,29 +15,19 @@ def get_courses():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Fetch details for a specific course, including its holes
+# Fetch hole details for a specific course by ID
 @app.route('/api/course/<int:course_id>', methods=['GET'])
-def get_course_details(course_id):
+def get_hole_details(course_id):
     try:
-        course_query = db.execute(f"SELECT id, name, location, par, yardage FROM courses WHERE id = {course_id}")
-        course = course_query.fetchone()
-        if not course:
-            return jsonify({"error": "Course not found"}), 404
-
-        holes_query = db.execute(f"SELECT hole_number, par, yardage, handicap FROM holes WHERE course_id = {course_id}")
-        holes_list = [{"hole_number": row[0], "par": row[1], "yardage": row[2], "handicap": row[3]} for row in holes_query.fetchall()]
-
-        course_details = {
-            "id": course[0],
-            "name": course[1],
-            "location": course[2],
-            "par": course[3],
-            "yardage": course[4],
-            "holes": holes_list,
-        }
-        return jsonify(course_details), 200
+        query = db.execute("SELECT id, hole_number, par, yardage FROM holes WHERE course_id = :course_id", {"course_id": course_id})
+        hole_details = [{"id": row[0], "hole_number": row[1], "par": row[2], "yardage": row[3]} for row in query.fetchall()]
+        
+        if not hole_details:
+            return jsonify({"message": "No holes found for the given course ID"}), 404
+        
+        return jsonify(hole_details), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True)

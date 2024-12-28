@@ -1,3 +1,4 @@
+
 // db/connection.ts
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -6,61 +7,40 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 const connectionString = process.env.DATABASE_URL || 
   `postgresql://[username]:[password]@caddygpt.crsoq44w6i2d.us-west-1.rds.amazonaws.com:5432/caddygpt`;
 
-// Create connection pool
-const pool = new Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false // For development - adjust for production
-  },
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
+// Create connection pool with retries
+const createPoolWithRetries = (retries = 5) => {
+  let attempts = 0;
 
-// Create drizzle database instance
-export const db = drizzle(pool);
+  const pool = new Pool({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false // For development - adjust for production
+    },
+    max: 20, // Maximum number of clients in the pool
+    idleTimeoutMillis: 30000 // Close idle clients after 30 seconds
+  });
 
-// Test connection
-export async function testConnection() {
-  try {
-    const client = await pool.connect();
-    console.log('Successfully connected to database');
-    client.release();
-    return true;
-  } catch (err) {
-    console.error('Error connecting to database:', err);
-    return false;
-  }
-}
+  const connectWithRetry = async () => {
+    try {
+      await pool.connect();
+      console.log('Database connection established successfully');
+    } catch (error) {
+      attempts += 1;
+      console.error(`Database connection failed (Attempt ${attempts}/${retries}):`, error);
+      if (attempts < retries) {
+        console.log('Retrying database connection...');
+        setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+      } else {
+        console.error('Max retries reached. Exiting...');
+        process.exit(1);
+      }
+    }
+  };
 
-// Schema definitions
-import { pgTable, serial, text, integer, decimal } from 'drizzle-orm/pg-core';
+  connectWithRetry();
+  return pool;
+};
 
-export const courses = pgTable('courses', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  location: text('location'),
-  par: integer('par'),
-  yardage: integer('yardage'),
-  rating: decimal('rating'),
-  slope: integer('slope'),
-});
-
-export const holes = pgTable('holes', {
-  id: serial('id').primaryKey(),
-  courseId: integer('course_id').references(() => courses.id),
-  holeNumber: integer('hole_number').notNull(),
-  par: integer('par').notNull(),
-  yardage: integer('yardage').notNull(),
-  handicap: integer('handicap'),
-  teeLat: decimal('tee_lat'),
-  teeLon: decimal('tee_lon'),
-  pinLat: decimal('pin_lat'),
-  pinLon: decimal('pin_lon'),
-});
-
-// Types
-export type Course = typeof courses.$inferSelect;
-export type NewCourse = typeof courses.$inferInsert;
-export type Hole = typeof holes.$inferSelect;
-export type NewHole = typeof holes.$inferInsert;
+// Export the pool
+const db = drizzle(createPoolWithRetries());
+export default db;
