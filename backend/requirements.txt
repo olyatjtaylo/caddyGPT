@@ -1,0 +1,13 @@
+
+fastapi
+uvicorn
+psycopg2-binary
+geoalchemy2
+
+# Added missing libraries
+flask
+flask-restful
+SQLAlchemy
+numpy
+cesium
+openai

@@ -1,0 +1,12 @@
+name: caddygpt
+services:
+  - name: web
+    git:
+      branch: main
+      repo_clone_url: https://github.com/JTB-Sports/caddy.git
+    build_command: npm install && npm run build
+    run_command: npm start
+    environment_slug: node-js
+    envs:
+      - key: NODE_ENV
+        value: production
