@@ -25,7 +25,7 @@ export const HoleNavigation = ({ courseData }) => {
     16: { yards: 552, par: 5 },
     17: { yards: 323, par: 4 },
     18: { yards: 222, par: 3 }
-  };
+  };                                    //Why are we reading this data feom a pdf?   
 
   useEffect(() => {
     updateHoleDetails(currentHole);
