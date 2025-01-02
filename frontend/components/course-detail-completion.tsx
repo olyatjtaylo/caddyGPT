@@ -157,7 +157,7 @@ const HoleDetails = ({ holeNumber }) => {
     1: { yards: 374, par: 4 },
     2: { yards: 398, par: 4 },
     // ... (rest of hole data)
-  }[holeNumber];
+  }[holeNumber];                //Is this real data or just a placeholder? Need full real data functioning...
 
   return (
     <Card className="p-4">
@@ -244,7 +244,7 @@ const ShotPlanner = ({ holeNumber }) => {
 const addHoleFeatures = (viewer, holeNumber) => {
   // Clear existing entities
   viewer.entities.removeAll();
-
+  
   // Add tee box
   const teeLat = getCourseHoleTeeLat(0, holeNumber);
   const teeLon = getCourseHoleTeeLon(0, holeNumber);
